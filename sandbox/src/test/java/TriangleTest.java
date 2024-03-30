@@ -8,7 +8,7 @@ public class TriangleTest {
     @DisplayName("Вычисление периметра треугольника успешный сценарий")
     public void calcPerimeterOfTriangleSuccessTest() {
 
-        Triangle triangle = new Triangle(3, 2, 5);
+        Triangle triangle = new Triangle(3, 4, 5);
 
         double perimeterResult = triangle.perimeter();
         double expectedPerimeter = 12.0;
