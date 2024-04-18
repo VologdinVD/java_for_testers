@@ -3,6 +3,9 @@ package manager;
 import model.ContactData;
 import org.openqa.selenium.By;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContactHelper extends HelperBase {
 
     public ContactHelper(ApplicationManager manager) {
@@ -26,8 +29,8 @@ public class ContactHelper extends HelperBase {
         returnToHomePage();
     }
 
-    public void removeContact() {
-        selectContact();
+    public void removeContact(ContactData contact) {
+        selectContact(contact);
         removeSelectedContact();
         //closeDialogWindow();
     }
@@ -51,12 +54,43 @@ public class ContactHelper extends HelperBase {
         type(By.name("email"), contact.email());
     }
 
-    private void selectContact() {
-        click(By.name("selected[]"));
+    private void selectContact(ContactData contact) {
+        click(By.cssSelector(String.format("input[value='%s']", contact.id())));
     }
 
     private void closeDialogWindow() {
         manager.driver.switchTo().alert().accept();
     }
 
+    public List<ContactData> getList() {
+        var contacts = new ArrayList<ContactData>();
+        var trs = manager.driver.findElements(By.cssSelector("tr[name=\"entry\"]"));
+        for (var tr: trs) {
+            var firstName = tr.findElement(By.xpath("//td[3]")).getText();
+            var lastName = tr.findElement(By.xpath("//td[2]")).getText();
+            var id = tr.findElement(By.name("selected[]")).getAttribute("value");
+            contacts.add(new ContactData().withId(id).withFirstName(firstName).withLastName(lastName));
+        }
+        return contacts;
+    }
+
+    public void modifyContact(ContactData contactData, ContactData modifiedContact) {
+        selectContact(contactData);
+        getInitContactModification();
+        fillContactForm(modifiedContact);
+        submitContactModification();
+        returnToHomePage();
+    }
+
+    private void submitContactModification() {
+        click(By.name("update"));
+    }
+
+    private void getInitContactModification() {
+        click(By.name("edit"));
+    }
+
+    public int getCount() {
+        return manager.driver.findElements(By.name("selected[]")).size();
+    }
 }
