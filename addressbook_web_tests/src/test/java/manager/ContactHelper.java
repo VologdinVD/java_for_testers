@@ -35,6 +35,10 @@ public class ContactHelper extends HelperBase {
         //closeDialogWindow();
     }
 
+    private void selectContact(ContactData contact) {
+        click(By.cssSelector(String.format("input[value='%s']", contact.id())));
+    }
+
     private void removeSelectedContact() {
         click(By.xpath("//input[@value=\'Delete\']"));
     }
@@ -54,8 +58,8 @@ public class ContactHelper extends HelperBase {
         type(By.name("email"), contact.email());
     }
 
-    private void selectContact(ContactData contact) {
-        click(By.cssSelector(String.format("input[value='%s']", contact.id())));
+    private void clickByIconEdit(ContactData contact) {
+        click(By.cssSelector(String.format("a[href*='edit.php?id=%s']", contact.id())));
     }
 
     private void closeDialogWindow() {
@@ -66,17 +70,18 @@ public class ContactHelper extends HelperBase {
         var contacts = new ArrayList<ContactData>();
         var trs = manager.driver.findElements(By.cssSelector("tr[name=\"entry\"]"));
         for (var tr: trs) {
-            var firstName = tr.findElement(By.xpath("//td[3]")).getText();
-            var lastName = tr.findElement(By.xpath("//td[2]")).getText();
-            var id = tr.findElement(By.name("selected[]")).getAttribute("value");
+            var cells = tr.findElements(By.tagName("td"));
+            var firstName = cells.get(2).getText();
+            var lastName = cells.get(1).getText();
+            var checkbox = tr.findElement(By.name("selected[]"));
+            var id = checkbox.getAttribute("value");
             contacts.add(new ContactData().withId(id).withFirstName(firstName).withLastName(lastName));
         }
         return contacts;
     }
 
     public void modifyContact(ContactData contactData, ContactData modifiedContact) {
-        selectContact(contactData);
-        getInitContactModification();
+        clickByIconEdit(contactData);
         fillContactForm(modifiedContact);
         submitContactModification();
         returnToHomePage();
@@ -84,10 +89,6 @@ public class ContactHelper extends HelperBase {
 
     private void submitContactModification() {
         click(By.name("update"));
-    }
-
-    private void getInitContactModification() {
-        click(By.name("edit"));
     }
 
     public int getCount() {
