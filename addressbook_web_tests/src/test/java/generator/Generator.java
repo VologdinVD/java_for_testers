@@ -61,7 +61,7 @@ public class Generator {
                     .withLastName(CommonFunctions.randomString(i))
                     .withMobilePhone(CommonFunctions.randomString(i))
                     .withEmail(CommonFunctions.randomString(i))
-                    .withPhoto("src/test/resources/images/image2.png"));
+                    .withPhoto(""));
         }
         return result;
     }
