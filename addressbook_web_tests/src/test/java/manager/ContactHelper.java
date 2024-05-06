@@ -40,7 +40,7 @@ public class ContactHelper extends HelperBase {
     }
 
     private void selectGroup(GroupData group) {
-        new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
+        new Select(manager.driver.findElement(By.name("to_group"))).selectByValue(group.id());
     }
 
     public void removeContact(ContactData contact) {
@@ -59,6 +59,10 @@ public class ContactHelper extends HelperBase {
 
     private void returnToHomePage() {
         manager.driver.findElement(By.linkText("home page")).click();
+    }
+
+    private void returnToHomePageAfterAdditionOfContactInGroup(GroupData group) {
+        click(By.cssSelector(String.format("a[href*='./?group=%s']", group.id())));
     }
 
     private void submitContactCreate() {
@@ -123,4 +127,16 @@ public class ContactHelper extends HelperBase {
     private void selectGroupForContacts(GroupData group) {
         new Select(manager.driver.findElement(By.name("group"))).selectByValue(group.id());
     }
+
+    public void addContactInGroup(ContactData contact, GroupData group) {
+        selectContact(contact);
+        selectGroup(group);
+        addContactToGroup();
+        returnToHomePageAfterAdditionOfContactInGroup(group);
+    }
+
+    private void addContactToGroup() {
+        manager.driver.findElement(By.name("add")).click();
+    }
+
 }
