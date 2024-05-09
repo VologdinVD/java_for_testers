@@ -13,7 +13,7 @@ public class ContactRemovalTests extends TestBase {
     @Test
     public void removeContactTest() {
         if (app.hbm().getContactCount() == 0) {
-            app.hbm().createContact(new ContactData("", "first name", "last name", "phone", "email", ""));
+            app.hbm().createContact(new ContactData("", "first name", "last name", "phone", "email", "", "", "", "", "", "", ""));
         }
         var oldContacts = app.hbm().getContactList();
         var rnd = new Random();
@@ -31,7 +31,7 @@ public class ContactRemovalTests extends TestBase {
             app.hbm().createGroup(new GroupData("", "group name", "group header", "group footer"));
         } else if (app.jdbc().getContactInGroupCount() == 0) {
             var group = app.hbm().getGroupList().get(0);
-            app.contacts().createContactInGroup(new ContactData("", "first name", "last name", "phone", "email", "src/test/resources/images/image2.png"), group);
+            app.contacts().createContactInGroup(new ContactData("", "first name", "last name", "phone", "email", "src/test/resources/images/image2.png", "", "", "", "", "", ""), group);
         }
         var group = app.hbm().getGroupList().get(0);
 

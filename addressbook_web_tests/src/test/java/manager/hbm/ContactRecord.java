@@ -23,6 +23,23 @@ public class ContactRecord {
 
     public String email;
 
+    @Column(name = "home")
+    public String homePhone;
+
+    @Column(name = "work")
+    public String workPhone;
+
+    @Column(name = "phone2")
+    public String secondaryPhone;
+
+    @Column(name = "email2")
+    public String emailSecond;
+
+    @Column(name = "email3")
+    public String emailThird;
+
+    public String address;
+
     public ContactRecord(){
     }
 

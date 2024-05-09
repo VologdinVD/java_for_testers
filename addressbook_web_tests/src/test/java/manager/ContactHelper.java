@@ -3,10 +3,15 @@ package manager;
 import model.ContactData;
 import model.GroupData;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ContactHelper extends HelperBase {
 
@@ -139,4 +144,33 @@ public class ContactHelper extends HelperBase {
         manager.driver.findElement(By.name("add")).click();
     }
 
+    public String getPhones(ContactData contact) {
+        return manager.driver.findElement(By.xpath(String.format("//input[@id='%s']/../../td[6]", contact.id()))).getText();
+    }
+
+    public Map<String, String> getPhones() {
+        var result = new HashMap<String, String>();
+        List<WebElement> rows = manager.driver.findElements(By.name("entry"));
+        for (WebElement row : rows) {
+            var id = row.findElement(By.tagName("input")).getAttribute("id");
+            var phones = row.findElements(By.tagName("td")).get(5).getText();
+            result.put(id, phones);
+        }
+        return result;
+    }
+
+    public String getInfo(ContactData contact) {
+        var result = "";
+        var contactsInfo = manager.driver.findElements(By.xpath(String.format("//input[@id='%s']", contact.id())));
+        for (WebElement info : contactsInfo) {
+            var cells = info.findElements(By.xpath("../../td"));
+            result = Stream.of(
+                    cells.get(3).getText(),
+                    cells.get(4).getText(),
+                    cells.get(5).getText())
+                    .filter(s -> s != null && ! "".equals(s))
+                    .collect(Collectors.joining("\n"));
+        }
+        return result;
+    }
 }

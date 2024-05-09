@@ -8,8 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HibernateHelper extends HelperBase {
 
@@ -27,11 +27,7 @@ public class HibernateHelper extends HelperBase {
     }
 
     static List<GroupData> convertListGroups(List<GroupRecord> records) {
-        List<GroupData> result = new ArrayList<>();
-        for (var record: records) {
-            result.add(convertGroupDataToGroupRecord(record));
-        }
-        return result;
+        return records.stream().map(HibernateHelper::convertGroupDataToGroupRecord).collect(Collectors.toList());
     }
 
     private static GroupData convertGroupDataToGroupRecord(GroupRecord record) {
@@ -81,11 +77,7 @@ public class HibernateHelper extends HelperBase {
     }
 
     static List<ContactData> convertListContacts(List<ContactRecord> records) {
-        List<ContactData> result = new ArrayList<>();
-        for (var record: records) {
-            result.add(convertContactDataToContactRecord(record));
-        }
-        return result;
+        return records.stream().map(HibernateHelper::convertContactDataToContactRecord).collect(Collectors.toList());
     }
 
     public List<ContactData> getContactList() {
@@ -95,7 +87,19 @@ public class HibernateHelper extends HelperBase {
     }
 
     private static ContactData convertContactDataToContactRecord(ContactRecord record) {
-        return new ContactData("" + record.id, record.firstName, record.lastName, record.mobilePhone, record.email, "");
+        return new ContactData(
+                "" + record.id,
+                record.firstName,
+                record.lastName,
+                record.mobilePhone,
+                record.email,
+                "",
+                record.homePhone,
+                record.workPhone,
+                record.secondaryPhone,
+                record.emailSecond,
+                record.emailThird,
+                record.address);
     }
 
     private static ContactRecord convertContactRecordToContactData(ContactData data) {

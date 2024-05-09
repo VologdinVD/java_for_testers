@@ -26,7 +26,7 @@ public class ContactAddInGroupTests extends TestBase {
                     var contactsInGroup = app.hbm().getContactsInGroup(group);
                     allContacts.removeAll(contactsInGroup);
                 } else {
-                    app.contacts().createContact(new ContactData("", "firstname", "lastname", "phone", "email", "src/test/resources/images/image2.png"));
+                    app.contacts().createContact(new ContactData("", "firstname", "lastname", "phone", "email", "src/test/resources/images/image2.png", "", "", "", "", "", ""));
                     break;
                 }
             }
