@@ -32,22 +32,37 @@ public class ContactRecord {
     @Column(name = "phone2")
     public String secondaryPhone;
 
-    @Column(name = "email2")
-    public String emailSecond;
+    public String email2;
 
-    @Column(name = "email3")
-    public String emailThird;
+    public String email3;
 
-    public String address;
+    public String address = "address";
+
+    public String middlename = "middlename";
+
+    public String nickname = "nickname";
+
+    public String company = "company";
+
+    public String title = "title";
+
+    public String fax = "fax";
+
+    public String homepage = "homepage";
 
     public ContactRecord(){
     }
 
-    public ContactRecord(int id, String firstName, String lastName, String mobilePhone, String email) {
+    public ContactRecord(int id, String firstName, String lastName, String mobilePhone, String homePhone, String workPhone, String email, String email2, String email3, String address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.mobilePhone = mobilePhone;
+        this.homePhone = homePhone;
+        this.workPhone = workPhone;
         this.email = email;
+        this.email2 = email2;
+        this.email3 = email3;
+        this.address = address;
     }
 }

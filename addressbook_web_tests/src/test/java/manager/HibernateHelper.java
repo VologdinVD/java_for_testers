@@ -10,6 +10,7 @@ import org.hibernate.cfg.Configuration;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class HibernateHelper extends HelperBase {
 
@@ -97,8 +98,8 @@ public class HibernateHelper extends HelperBase {
                 record.homePhone,
                 record.workPhone,
                 record.secondaryPhone,
-                record.emailSecond,
-                record.emailThird,
+                record.email2,
+                record.email3,
                 record.address);
     }
 
@@ -107,7 +108,18 @@ public class HibernateHelper extends HelperBase {
         if("".equals(id)) {
             id = "0";
         }
-        return new ContactRecord(Integer.parseInt(id), data.firstName(), data.lastName(), data.mobilePhone(), data.email());
+        return new ContactRecord(
+                Integer.parseInt(id),
+                data.firstName(),
+                data.lastName(),
+                data.mobilePhone(),
+                data.homePhone(),
+                data.workPhone(),
+                data.email(),
+                data.email2(),
+                data.email3(),
+                data.address()
+        );
     }
 
     public List<ContactData> getContactsInGroup(GroupData group) {
@@ -120,5 +132,19 @@ public class HibernateHelper extends HelperBase {
         return sessionFactory.fromSession(session -> {
             return convertListContacts(session.get(GroupRecord.class, group.id()).contacts).size();
         });
+    }
+
+    public String getListInfoOfContact(ContactData contact) {
+        return Stream.of(
+                        contact.address(),
+                        contact.email(),
+                        contact.email2(),
+                        contact.email3(),
+                        contact.homePhone(),
+                        contact.mobilePhone(),
+                        contact.workPhone(),
+                        contact.secondaryPhone())
+                .filter(s -> s != null && ! "".equals(s))
+                .collect(Collectors.joining("\n"));
     }
 }
