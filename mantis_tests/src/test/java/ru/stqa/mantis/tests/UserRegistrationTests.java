@@ -1,9 +1,10 @@
 package ru.stqa.mantis.tests;
 
 import common.CommonFunctions;
-import model.RegistrationData;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import ru.stqa.mantis.model.RegistrationData;
 
 import java.time.Duration;
 import java.util.function.Supplier;
@@ -36,4 +37,21 @@ public class UserRegistrationTests extends TestBase {
         // проверяем, что пользователь может залогиниться (HttpSessionHelper)
         app.http().login(registrationData.username(), registrationData.password());
     }
+
+    @ParameterizedTest
+    @MethodSource("regData")
+    public void canRegisterUserFromApi(RegistrationData registrationData) {
+        var email = String.format("%s@localhost", registrationData.username());
+        app.jamesApi().addUser(email, registrationData.password());
+
+        app.rest().createUser(registrationData.username(), email);
+
+        var messages = app.mail().receive(email, registrationData.password(), Duration.ofSeconds(60));
+        var url = app.mail().getLinkOfMail(messages);
+
+        app.registration().verifyUser(url, registrationData.username(), registrationData.password(), registrationData.password());
+        app.http().login(registrationData.username(), registrationData.password());
+        Assertions.assertTrue(app.http().isLoggedIn());
+    }
+
 }

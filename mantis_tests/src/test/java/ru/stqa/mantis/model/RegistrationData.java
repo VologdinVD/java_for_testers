@@ -1,6 +1,7 @@
-package model;
+package ru.stqa.mantis.model;
 
 public record RegistrationData(String username, String password) {
+
     public RegistrationData() {
         this("", "");
     }
