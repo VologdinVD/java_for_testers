@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 
 public class ContactHelper extends HelperBase {
 
+    protected static ApplicationManager app;
+
     public ContactHelper(ApplicationManager manager) {
         super(manager);
     }
@@ -45,7 +47,7 @@ public class ContactHelper extends HelperBase {
     }
 
     private void selectGroup(GroupData group) {
-        new Select(manager.driver.findElement(By.name("to_group"))).selectByValue(group.id());
+        new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
     }
 
     public void removeContact(ContactData contact) {
@@ -140,9 +142,13 @@ public class ContactHelper extends HelperBase {
 
     public void addContactInGroup(ContactData contact, GroupData group) {
         selectContact(contact);
-        selectGroup(group);
+        selectGroupForAddContact(group);
         addContactToGroup();
         returnToHomePageAfterAdditionOfContactInGroup(group);
+    }
+
+    private void selectGroupForAddContact(GroupData group) {
+        new Select(manager.driver.findElement(By.name("to_group"))).selectByValue(group.id());
     }
 
     private void addContactToGroup() {

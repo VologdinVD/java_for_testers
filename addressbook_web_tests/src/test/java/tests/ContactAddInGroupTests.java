@@ -1,5 +1,7 @@
 package tests;
 
+import manager.ContactHelper;
+import manager.GroupHelper;
 import model.ContactData;
 import model.GroupData;
 import org.junit.jupiter.api.Assertions;

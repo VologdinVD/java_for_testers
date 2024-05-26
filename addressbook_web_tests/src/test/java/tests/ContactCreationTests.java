@@ -16,16 +16,30 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 
 public class ContactCreationTests extends TestBase {
 
-    public static List<ContactData> contactProvider() throws IOException {
+    /*public static List<ContactData> contactProvider() throws IOException {
         var json = Files.readString(Paths.get("contacts.json"));
         ObjectMapper mapper = new ObjectMapper();
         var value = mapper.readValue(json, new TypeReference<List<ContactData>>() {});
         var result = new ArrayList<ContactData>(value);
         return result;
+    }*/
+
+    public static Stream<ContactData> contactProvider() {
+        Supplier<ContactData> randomContact = () -> new ContactData()
+                .withFirstName(CommonFunctions.randomString(5))
+                .withLastName(CommonFunctions.randomString(5))
+                .withMobilePhone(CommonFunctions.randomString(5))
+                .withPhoto("src/test/resources/images/image2.png")
+                .withMobilePhone(CommonFunctions.randomString(5))
+                .withEmail(CommonFunctions.randomString(5));
+        return Stream.generate(randomContact).limit(5);
+
     }
 
     @ParameterizedTest

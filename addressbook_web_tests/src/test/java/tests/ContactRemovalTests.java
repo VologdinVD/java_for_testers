@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.Allure;
 import model.ContactData;
 import model.GroupData;
 import org.junit.jupiter.api.Assertions;
@@ -7,14 +8,18 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 
 public class ContactRemovalTests extends TestBase {
 
     @Test
     public void removeContactTest() {
-        if (app.hbm().getContactCount() == 0) {
-            app.hbm().createContact(new ContactData("", "first name", "last name", "phone", "email", "", "", "", "", "", "", ""));
-        }
+        Allure.step("Checking precondition", step -> {
+            if (app.hbm().getContactCount() == 0) {
+                app.hbm().createContact(new ContactData("", "first name", "last name", "phone", "email", "", "", "", "", "", "", ""));
+            }
+        });
+
         var oldContacts = app.hbm().getContactList();
         var rnd = new Random();
         var index = rnd.nextInt(oldContacts.size());
@@ -22,7 +27,11 @@ public class ContactRemovalTests extends TestBase {
         var newContacts = app.hbm().getContactList();
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.remove(index);
-        Assertions.assertEquals(newContacts, expectedList);
+
+        Allure.step("Validating results", step -> {
+            Assertions.assertEquals(newContacts, expectedList);
+        });
+
     }
 
     @Test

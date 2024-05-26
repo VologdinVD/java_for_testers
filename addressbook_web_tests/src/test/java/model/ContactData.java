@@ -16,7 +16,7 @@ public record ContactData(
 ) {
 
     public ContactData() {
-        this("", "", "", "", "", "", "", "", "", "", "", "");
+        this("", "", "", "", "", "src/test/resources/images/image2.png", "", "", "", "", "", "");
     }
 
     public ContactData withId(String id) {

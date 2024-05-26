@@ -19,12 +19,12 @@ public class HibernateHelper extends HelperBase {
     public HibernateHelper(ApplicationManager manager) {
         super(manager);
         sessionFactory = new Configuration()
-            .addAnnotatedClass(ContactRecord.class)
-            .addAnnotatedClass(GroupRecord.class)
-            .setProperty(AvailableSettings.JAKARTA_JDBC_URL, "jdbc:mysql://localhost/addressbook?zeroDateTimeBehavior=convertToNull")
-            .setProperty(AvailableSettings.JAKARTA_JDBC_USER, "root")
-            .setProperty(AvailableSettings.JAKARTA_JDBC_PASSWORD, "")
-            .buildSessionFactory();
+                .addAnnotatedClass(ContactRecord.class)
+                .addAnnotatedClass(GroupRecord.class)
+                .setProperty(AvailableSettings.JAKARTA_JDBC_URL, "jdbc:mysql://localhost/addressbook?zeroDateTimeBehavior=convertToNull")
+                .setProperty(AvailableSettings.JAKARTA_JDBC_USER, "root")
+                .setProperty(AvailableSettings.JAKARTA_JDBC_PASSWORD, "")
+                .buildSessionFactory();
     }
 
     static List<GroupData> convertListGroups(List<GroupRecord> records) {
@@ -37,7 +37,7 @@ public class HibernateHelper extends HelperBase {
 
     private static GroupRecord convertGroupRecordToGroupData(GroupData data) {
         var id = data.id();
-        if("".equals(id)) {
+        if ("".equals(id)) {
             id = "0";
         }
         return new GroupRecord(Integer.parseInt(id), data.name(), data.header(), data.footer());
@@ -105,7 +105,7 @@ public class HibernateHelper extends HelperBase {
 
     private static ContactRecord convertContactRecordToContactData(ContactData data) {
         var id = data.id();
-        if("".equals(id)) {
+        if ("".equals(id)) {
             id = "0";
         }
         return new ContactRecord(
@@ -124,7 +124,7 @@ public class HibernateHelper extends HelperBase {
 
     public List<ContactData> getContactsInGroup(GroupData group) {
         return sessionFactory.fromSession(session -> {
-           return convertListContacts(session.get(GroupRecord.class, group.id()).contacts);
+            return convertListContacts(session.get(GroupRecord.class, group.id()).contacts);
         });
     }
 
@@ -144,7 +144,50 @@ public class HibernateHelper extends HelperBase {
                         contact.mobilePhone(),
                         contact.workPhone(),
                         contact.secondaryPhone())
-                .filter(s -> s != null && ! "".equals(s))
+                .filter(s -> s != null && !"".equals(s))
                 .collect(Collectors.joining("\n"));
+    }
+
+    public GroupData searchGroupForAddContact() {
+        var allGroups = getGroupList();
+        GroupData rightGroup = new GroupData();
+        for (var group : allGroups) {
+            var contactsCount = getContactCount();
+            var contactsCountInGroup = getContactsInGroupCount(group);
+            if (contactsCount > contactsCountInGroup) {
+                rightGroup = group;
+            }
+        }
+        return rightGroup;
+    }
+
+    public List<ContactData> deleteContactsInGroup(GroupData group) {
+        List<ContactData> allContacts = getContactList();
+        var contactsInGroup = getContactsInGroup(group);
+        allContacts.removeAll(contactsInGroup);
+        return allContacts;
+    }
+
+    public GroupData getGroup() {
+        GroupData group;
+        createGroup(new GroupData("", "group name", "group header", "group footer"));
+        var allGroups = getGroupList();
+        group = allGroups.get(allGroups.size() - 1);
+        return group;
+    }
+
+    public GroupData getGroupForAddContact() {
+        GroupData group;
+        group = searchGroupForAddContact();
+        deleteContactsInGroup(group);
+        return group;
+    }
+
+    public ContactData getContact() {
+        ContactData contact;
+        createContact(new ContactData("", "firstname", "lastname", "phone", "email", "src/test/resources/images/image2.png", "", "", "", "", "", ""));
+        var allContacts = getContactList();
+        contact = allContacts.get(allContacts.size() - 1);
+        return contact;
     }
 }
