@@ -19,12 +19,13 @@ public class GroupHelper extends HelperBase {
         }
     }
 
-    public void createGroup(GroupData group) {
+    public GroupData createGroup(GroupData group) {
         openGroupsPage();
         initGroupCreation();
         fillGroupForm(group);
         submitGroupCreation();
         returnToGroupsPage();
+        return group;
     }
 
     public void removeGroup(GroupData group) {

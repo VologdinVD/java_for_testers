@@ -4,6 +4,7 @@ import manager.ContactHelper;
 import manager.GroupHelper;
 import model.ContactData;
 import model.GroupData;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -15,27 +16,25 @@ public class ContactAddInGroupTests extends TestBase {
 
     @Test
     public void canAddContactInGroupTest() {
-        List<ContactData> allContacts;
+
+        GroupData group;
+        ContactData contact;
+
         if (app.hbm().getGroupCount() == 0) {
-            app.hbm().createGroup(new GroupData("", "group name", "group header", "group footer"));
-        } else {
-            allContacts = app.hbm().getContactList();
-            var contactsCount = app.hbm().getContactCount();
-            var allGroups = app.hbm().getGroupList();
-            for (var group: allGroups) {
-                var contactsCountInGroup = app.hbm().getContactsInGroupCount(group);
-                if (contactsCount > contactsCountInGroup) {
-                    var contactsInGroup = app.hbm().getContactsInGroup(group);
-                    allContacts.removeAll(contactsInGroup);
-                } else {
-                    app.contacts().createContact(new ContactData("", "firstname", "lastname", "phone", "email", "src/test/resources/images/image2.png", "", "", "", "", "", ""));
-                    break;
-                }
+            group = app.groups().createGroup(new GroupData("", "group name", "group header", "group footer"));
+            if (app.hbm().getContactCount() == 0) {
+                contact = app.contacts().createContact(new ContactData("", "firstname", "lastname", "phone", "email", "src/test/resources/images/image2.png", "", "", "", "", "", ""));
+            } else {
+                contact = app.hbm().getContactList().get(0);
             }
+        } else if (app.hbm().searchGroupForAddContact() == null) {
+            group = app.hbm().getGroupList().get(0);
+            contact = app.contacts().createContact(new ContactData("", "firstname", "lastname", "phone", "email", "src/test/resources/images/image2.png", "", "", "", "", "", ""));
+        } else {
+            group = app.hbm().searchGroupForAddContact();
+            var contacts = app.hbm().deleteContactsInGroup(group);
+            contact = contacts.get(0);
         }
-        allContacts = app.hbm().getContactList();
-        var group = app.hbm().getGroupList().get(0);
-        var contact = allContacts.get(allContacts.size() - 1);
 
         var oldRelated = app.hbm().getContactsInGroup(group);
         app.contacts().addContactInGroup(contact, group);

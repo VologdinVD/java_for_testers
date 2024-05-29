@@ -31,11 +31,12 @@ public class ContactHelper extends HelperBase {
         return manager.isElementPresent(By.name("home"));
     }
 
-    public void createContact(ContactData contact) {
+    public ContactData createContact(ContactData contact) {
         openCreationContactPage();
         fillContactForm(contact);
         submitContactCreate();
         returnToHomePage();
+        return contact;
     }
 
     public void createContactInGroup(ContactData contact, GroupData group) {
@@ -77,8 +78,8 @@ public class ContactHelper extends HelperBase {
     }
 
     private void fillContactForm(ContactData contact) {
-        type(By.name("lastname"), contact.lastName());
         type(By.name("firstname"), contact.firstName());
+        type(By.name("lastname"), contact.lastName());
         type(By.name("address"), contact.address());
         type(By.name("email"), contact.email());
         type(By.name("email2"), contact.email2());

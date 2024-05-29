@@ -55,12 +55,13 @@ public class HibernateHelper extends HelperBase {
         });
     }
 
-    public void createGroup(GroupData groupData) {
+    public GroupData createGroup(GroupData groupData) {
         sessionFactory.inSession(session -> {
             session.getTransaction().begin();
             session.persist(convertGroupRecordToGroupData(groupData));
             session.getTransaction().commit();
         });
+        return groupData;
     }
 
     public Long getContactCount() {
@@ -69,12 +70,13 @@ public class HibernateHelper extends HelperBase {
         });
     }
 
-    public void createContact(ContactData contactData) {
+    public ContactData createContact(ContactData contactData) {
         sessionFactory.inSession(session -> {
             session.getTransaction().begin();
             session.persist(convertContactRecordToContactData(contactData));
             session.getTransaction().commit();
         });
+        return contactData;
     }
 
     static List<ContactData> convertListContacts(List<ContactRecord> records) {
@@ -150,7 +152,7 @@ public class HibernateHelper extends HelperBase {
 
     public GroupData searchGroupForAddContact() {
         var allGroups = getGroupList();
-        GroupData rightGroup = new GroupData();
+        GroupData rightGroup = null;
         for (var group : allGroups) {
             var contactsCount = getContactCount();
             var contactsCountInGroup = getContactsInGroupCount(group);
@@ -166,28 +168,5 @@ public class HibernateHelper extends HelperBase {
         var contactsInGroup = getContactsInGroup(group);
         allContacts.removeAll(contactsInGroup);
         return allContacts;
-    }
-
-    public GroupData getGroup() {
-        GroupData group;
-        createGroup(new GroupData("", "group name", "group header", "group footer"));
-        var allGroups = getGroupList();
-        group = allGroups.get(allGroups.size() - 1);
-        return group;
-    }
-
-    public GroupData getGroupForAddContact() {
-        GroupData group;
-        group = searchGroupForAddContact();
-        deleteContactsInGroup(group);
-        return group;
-    }
-
-    public ContactData getContact() {
-        ContactData contact;
-        createContact(new ContactData("", "firstname", "lastname", "phone", "email", "src/test/resources/images/image2.png", "", "", "", "", "", ""));
-        var allContacts = getContactList();
-        contact = allContacts.get(allContacts.size() - 1);
-        return contact;
     }
 }
