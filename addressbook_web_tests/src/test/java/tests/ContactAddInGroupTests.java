@@ -21,15 +21,16 @@ public class ContactAddInGroupTests extends TestBase {
         ContactData contact;
 
         if (app.hbm().getGroupCount() == 0) {
-            group = app.groups().createGroup(new GroupData("", "group name", "group header", "group footer"));
+            group = app.hbm().getNewGroupForAddContact();
             if (app.hbm().getContactCount() == 0) {
-                contact = app.contacts().createContact(new ContactData("", "firstname", "lastname", "phone", "email", "src/test/resources/images/image2.png", "", "", "", "", "", ""));
+                contact = app.hbm().getNewContactForAddInGroup();
             } else {
-                contact = app.hbm().getContactList().get(0);
+                var allContacts = app.hbm().getContactList();
+                contact = app.hbm().getContactList().get(allContacts.size() - 1);
             }
         } else if (app.hbm().searchGroupForAddContact() == null) {
             group = app.hbm().getGroupList().get(0);
-            contact = app.contacts().createContact(new ContactData("", "firstname", "lastname", "phone", "email", "src/test/resources/images/image2.png", "", "", "", "", "", ""));
+            contact = app.hbm().getNewContactForAddInGroup();
         } else {
             group = app.hbm().searchGroupForAddContact();
             var contacts = app.hbm().deleteContactsInGroup(group);
@@ -49,4 +50,6 @@ public class ContactAddInGroupTests extends TestBase {
         expectedList.sort(compareById);
         Assertions.assertEquals(newRelated, expectedList);
     }
+
+
 }

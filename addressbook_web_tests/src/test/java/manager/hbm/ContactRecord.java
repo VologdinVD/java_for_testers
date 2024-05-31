@@ -38,6 +38,8 @@ public class ContactRecord {
 
     public String address = "address";
 
+    public String photo;
+
     public String middlename = "middlename";
 
     public String nickname = "nickname";
@@ -53,7 +55,7 @@ public class ContactRecord {
     public ContactRecord(){
     }
 
-    public ContactRecord(int id, String firstName, String lastName, String mobilePhone, String homePhone, String workPhone, String email, String email2, String email3, String address) {
+    public ContactRecord(int id, String firstName, String lastName, String mobilePhone, String homePhone, String workPhone, String email, String email2, String email3, String address, String photo) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -64,5 +66,6 @@ public class ContactRecord {
         this.email2 = email2;
         this.email3 = email3;
         this.address = address;
+        this.photo = photo;
     }
 }

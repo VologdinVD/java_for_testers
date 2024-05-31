@@ -22,9 +22,7 @@ public class ContactHelper extends HelperBase {
     }
 
     public void openCreationContactPage() {
-        if (!manager.isElementPresent(By.name("new"))) {
-            manager.driver.findElement(By.linkText("add new")).click();
-        }
+        manager.driver.findElement(By.linkText("add new")).click();
     }
 
     public boolean isContactPresent() {
@@ -142,10 +140,15 @@ public class ContactHelper extends HelperBase {
     }
 
     public void addContactInGroup(ContactData contact, GroupData group) {
+        openHomePage();
         selectContact(contact);
         selectGroupForAddContact(group);
         addContactToGroup();
         returnToHomePageAfterAdditionOfContactInGroup(group);
+    }
+
+    private void openHomePage() {
+        click(By.linkText("home"));
     }
 
     private void selectGroupForAddContact(GroupData group) {

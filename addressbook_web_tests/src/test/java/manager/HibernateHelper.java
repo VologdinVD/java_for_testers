@@ -96,13 +96,14 @@ public class HibernateHelper extends HelperBase {
                 record.lastName,
                 record.mobilePhone,
                 record.email,
-                "",
+                record.photo,
                 record.homePhone,
                 record.workPhone,
                 record.secondaryPhone,
                 record.email2,
                 record.email3,
-                record.address);
+                record.address
+        );
     }
 
     private static ContactRecord convertContactRecordToContactData(ContactData data) {
@@ -120,7 +121,8 @@ public class HibernateHelper extends HelperBase {
                 data.email(),
                 data.email2(),
                 data.email3(),
-                data.address()
+                data.address(),
+                data.photo()
         );
     }
 
@@ -168,5 +170,23 @@ public class HibernateHelper extends HelperBase {
         var contactsInGroup = getContactsInGroup(group);
         allContacts.removeAll(contactsInGroup);
         return allContacts;
+    }
+
+    public ContactData getNewContactForAddInGroup() {
+        ContactData contact;
+        var allContacts = getContactList();
+        createContact(new ContactData("", "firstname", "lastname", "phone", "email", "src/test/resources/images/image2.png", "", "", "", "", "", ""));
+        allContacts = getContactList();
+        contact = allContacts.get(allContacts.size() - 1);
+        return contact;
+    }
+
+    public GroupData getNewGroupForAddContact() {
+        GroupData group;
+        var allGroups = getGroupList();
+        createGroup(new GroupData("", "group name", "group header", "group footer"));
+        allGroups = getGroupList();
+        group = allGroups.get(allGroups.size() - 1);
+        return group;
     }
 }
